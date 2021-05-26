@@ -5,8 +5,8 @@ class Range extends React.Component {
     return (
       <div className="range">
         <div className="range__value range__value-min">0$</div>
-        <div className="slider">
-          <div className="slider__bar">
+        <div className="range__content">
+          <div className="range__line">
             <div className="range__area range__area-min">
               <div className="bullet"></div>
             </div>

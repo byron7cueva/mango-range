@@ -1,0 +1,52 @@
+.range {
+  display: flex;
+  align-items: center;
+}
+
+.range__value, .slider {
+  display: inline-block;
+}
+
+.range__value {
+  width: 3em;
+}
+
+.range__value-max {
+  text-align: right;
+}
+
+.range__content {
+  display: inline-flex;
+  align-items: center;
+  width: calc(100% - 6em);
+}
+
+.range__line {
+  position: relative;
+  height: 2px;
+  width: 100%;
+  background-color: #000;
+}
+
+.range__area {
+  position: absolute;
+  top: -7px;
+  height: 200%;
+}
+
+.range__area-min {
+  left: 0;
+  width: 20%;
+}
+
+.range__area-max {
+  right: 0;
+  width: 50%;
+}
+
+.bullet {
+  width: 16px;
+  height: 16px;
+  background-color: #000;
+  border-radius: 50%;
+}
