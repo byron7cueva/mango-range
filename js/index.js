@@ -5,14 +5,14 @@ class Range extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      minValue: props.min,
-      maxValue:props.max
+      minEditable: false,
+      maxEditable: false
     }
     this.rangeLineRef = React.createRef();
     this.rangeAreaMinRef = React.createRef();
     this.rangeAreaMaxRef = React.createRef();
-    this.minValueInputRef = React.createRef();
-    this.maxValueInputRef = React.createRef();
+    this.minInputRef = React.createRef();
+    this.maxInputRef = React.createRef();
     this.width = 0;
     this.widthStep = 0;
     this.rangeToMove = null;
@@ -31,26 +31,31 @@ class Range extends React.Component {
       let widthRange;
       let value;
       const { name } = this.rangeToMove.dataset;
-      if (name === "minValue") {
+      if (name === "min") {
         widthRange = this.rangeToMove.clientWidth + event.movementX;
         widthRange = (widthRange > this.width? this.width : widthRange);
-        value = Math.trunc(widthRange / this.widthStep) + this.props.min;
-        if (value >= this.state.maxValue) {
+        value = Math.trunc(widthRange / this.widthStep) + this.props.minLimit;
+        // Min value and max value can't be crossed in range
+        if (value >= this.props.max) {
           return;
         }
+        this.props.onChangeMin(value);
       } else {
         widthRange = this.rangeToMove.clientWidth - event.movementX;
         widthRange = (widthRange > this.width? this.width : widthRange);
-        value = this.props.max - (Math.trunc(widthRange / this.widthStep));
-        if (value <= this.state.minValue) {
+        value = this.props.maxLimit - (Math.trunc(widthRange / this.widthStep));
+        // Min value and max value can't be crossed in range
+        if (value <= this.props.min) {
           return;
         }
+        this.props.onChangeMax(value);
       }
       this.rangeToMove.style.width = `${widthRange}px`;
-      this.setState({
-        [name]: value
-      });
-      this[`${name}InputRef`].current.value = value;
+
+      const input = this[`${name}InputRef`].current;
+      if (input !== null) {
+        input.value = value;
+      }
     }
   }
 
@@ -58,34 +63,66 @@ class Range extends React.Component {
     if (event.key === 'Enter') {
       const { name, value } = event.target;
       const numberValue = parseInt(value);
-      if (numberValue < this.props.min || numberValue > this.props.max
-        || (name === 'minValue' && numberValue >= this.state.maxValue )
-        || (name === 'maxValue' && numberValue <= this.state.minValue)) {
-        event.target.value = this.state[name];
+      // The value will never be less than min or greater than max input values.
+      if (numberValue < this.props.minLimit || numberValue > this.props.maxLimit
+        || (name === 'min' && numberValue >= this.props.max )
+        || (name === 'max' && numberValue <= this.props.min)) {
+        event.target.value = this.props[name];
         return;
       }
+
+      if (name === "min") {
+        this.props.onChangeMin(value);
+      } else {
+        this.props.onChangeMax(value);
+      }
+
       this.setState({
-        [name]: value
+        [`${name}Editable`]: false
       }, () => {
         this.calculatePositionPullet();
       });
     }
   }
 
+  onClickLabelHandler = (event) => {
+    const { name } = event.target.dataset;
+    this.setState({
+      [`${name}Editable`]: true
+    }, () => {
+      const input = this[`${name}InputRef`].current;
+      input.value = this.props[`${name}`];
+      input.select();
+    });
+  }
+
   calculatePositionPullet() {
-    this.rangeAreaMinRef.current.style.width = `${this.widthStep * (parseInt(this.state.minValue) - this.props.min)}px`;
-    this.rangeAreaMaxRef.current.style.width = `${this.width - (this.widthStep * (parseInt(this.state.maxValue) - this.props.min))}px`;
+    this.rangeAreaMinRef.current.style.width = `${this.widthStep * (parseInt(this.props.min) - this.props.minLimit)}px`;
+    this.rangeAreaMaxRef.current.style.width = `${this.width - (this.widthStep * (parseInt(this.props.max) - this.props.minLimit))}px`;
   }
 
   render() {
+    const { min, max } = this.props;
+    const { minEditable, maxEditable } = this.state;
     return (
       <div className="range">
         <div className="range__value range__value-min">
-          <input type="number" name="minValue" ref={this.minValueInputRef} onKeyDown={this.onKeyDownHandler} />
+          {/* The user can click on both currency number label values (min or max) and set a new value */}
+          { minEditable
+            ? <input
+                type="number"
+                name="min"
+                ref={this.minInputRef}
+                onKeyDown={this.onKeyDownHandler}
+              />
+            : <span data-name="min" onClick={this.onClickLabelHandler}>{min}</span>
+          } $
         </div>
+        { /* The component CAN'T be a HTML5 input range. It has to be a custom one */ }
         <div className="range__content">
           <div className="range__line" ref={this.rangeLineRef}>
-            <div className="range__area range__area-min" ref={this.rangeAreaMinRef} data-name="minValue">
+            <div className="range__area range__area-min" ref={this.rangeAreaMinRef} data-name="min">
+              {/* The user can drag two bullets through the range line */}
               <div
                 className="bullet bullet-min"
                 onMouseDown={this.onMouseDownHandler}
@@ -94,7 +131,8 @@ class Range extends React.Component {
                 onMouseLeave={this.onMouseUpHandler}>
               </div>
             </div>
-            <div className="range__area range__area-max" ref={this.rangeAreaMaxRef} data-name="maxValue">
+            <div className="range__area range__area-max" ref={this.rangeAreaMaxRef} data-name="max">
+              {/* The user can drag two bullets through the range line */}
               <div className="bullet bullet-max"
               onMouseDown={this.onMouseDownHandler}
               onMouseUp={this.onMouseUpHandler}
@@ -104,7 +142,16 @@ class Range extends React.Component {
           </div>
         </div>
         <div className="range__value range__value-max">
-          <input type="text" name="maxValue" ref={this.maxValueInputRef} onKeyDown={this.onKeyDownHandler} />
+          {/* The user can click on both currency number label values (min or max) and set a new value */}
+          { maxEditable
+            ? <input
+              type="text"
+              name="max"
+              ref={this.maxInputRef}
+              onKeyDown={this.onKeyDownHandler}
+              />
+            : <span data-name="max" onClick={this.onClickLabelHandler}>{max}</span>
+          } $
         </div>
       </div>
     )
@@ -113,16 +160,49 @@ class Range extends React.Component {
   componentDidMount() {
     new ResizeObserver(resizeEntity => {
       this.width = resizeEntity[0].target.clientWidth;
-      this.steps = this.props.max - this.props.min;
+      this.steps = this.props.maxLimit - this.props.minLimit;
       this.widthStep = this.width / this.steps;
       this.calculatePositionPullet();
     }).observe(this.rangeLineRef.current);
-    this.minValueInputRef.current.value = this.state.minValue;
-    this.maxValueInputRef.current.value = this.state.maxValue;
+  }
+}
+
+class Exercise1 extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      mi: 45,
+      mx: 70
+    };
+  }
+
+  onChangeMin = (value) => {
+    this.setState({
+      mi: value
+    });
+  }
+
+  onChangeMax = (value) => {
+    this.setState({
+      mx: value
+    });
+  }
+
+  render() {
+    return (
+      <Range
+        minLimit={30}
+        maxLimit={80}
+        min={this.state.mi}
+        max={this.state.mx}
+        onChangeMin={this.onChangeMin}
+        onChangeMax={this.onChangeMax}
+      />
+    );
   }
 }
 
 ReactDOM.render(
-  <Range min={30} max={80} />,
+  <Exercise1 />,
   document.getElementById('root')
 );
