@@ -8,6 +8,15 @@ module.exports = {
     compress: true,
     port: 9000
   },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        use: 'babel-loader',
+        exclude: /node_modules/
+      },
+    ]
+  },
   plugins: [
     // Add support HTML
     new HtmlWebPackPlugin({
