@@ -5,22 +5,49 @@ class Range extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      minValue: 0,
-      maxValue:0
+      minValue: props.min,
+      maxValue:props.max
     }
     this.rangeLineRef = React.createRef();
     this.rangeAreaMinRef = React.createRef();
     this.rangeAreaMaxRef = React.createRef();
     this.width = 0;
-    this.step = 0;
+    this.widthStep = 0;
+    this.rangeToMove = null;
   }
 
   onMouseDownHandler = (event) => {
-    console.log("Hizo clic", event);
+    this.rangeToMove = event.target.parentElement;
   }
 
   onMouseUpHandler = () => {
-    console.log("Solto");
+    this.rangeToMove = null;
+  }
+
+  onMouseMoveHandler = (event) => {
+    if (this.rangeToMove !== null) {
+      let widthRange;
+      let value;
+      if (this.rangeToMove.dataset.name === "minValue") {
+        widthRange = this.rangeToMove.clientWidth + event.movementX;
+        widthRange = (widthRange > this.width? this.width : widthRange);
+        value = Math.trunc(widthRange / this.widthStep) + this.props.min;
+        if (value >= this.state.maxValue) {
+          return;
+        }
+      } else {
+        widthRange = this.rangeToMove.clientWidth - event.movementX;
+        widthRange = (widthRange > this.width? this.width : widthRange);
+        value = this.props.max - (Math.trunc(widthRange / this.widthStep));
+        if (value <= this.state.minValue) {
+          return;
+        }
+      }
+      this.rangeToMove.style.width = `${widthRange}px`;
+      this.setState({
+        [this.rangeToMove.dataset.name]: value
+      });
+    }
   }
 
   onChangeHandler = (event) => {
@@ -32,8 +59,8 @@ class Range extends React.Component {
   }
 
   calculatePositionPullet() {
-    this.rangeAreaMinRef.current.style.width = `${this.step * parseInt(this.state.minValue)}px`;
-    this.rangeAreaMaxRef.current.style.width = `${this.width - (this.step * parseInt(this.state.maxValue))}px`;
+    this.rangeAreaMinRef.current.style.width = `${this.widthStep * (parseInt(this.state.minValue) - this.props.min)}px`;
+    this.rangeAreaMaxRef.current.style.width = `${this.width - (this.widthStep * (parseInt(this.state.maxValue) - this.props.min))}px`;
   }
 
   render() {
@@ -44,11 +71,21 @@ class Range extends React.Component {
         </div>
         <div className="range__content">
           <div className="range__line" ref={this.rangeLineRef}>
-            <div className="range__area range__area-min" ref={this.rangeAreaMinRef}>
-              <div className="bullet bullet-min" onMouseDown={this.onMouseDownHandler} onMouseUp={this.onMouseUpHandler}></div>
+            <div className="range__area range__area-min" ref={this.rangeAreaMinRef} data-name="minValue">
+              <div
+                className="bullet bullet-min"
+                onMouseDown={this.onMouseDownHandler}
+                onMouseUp={this.onMouseUpHandler}
+                onMouseMove={this.onMouseMoveHandler}
+                onMouseLeave={this.onMouseUpHandler}>
+              </div>
             </div>
-            <div className="range__area range__area-max" ref={this.rangeAreaMaxRef}>
-              <div className="bullet bullet-max"></div>
+            <div className="range__area range__area-max" ref={this.rangeAreaMaxRef} data-name="maxValue">
+              <div className="bullet bullet-max"
+              onMouseDown={this.onMouseDownHandler}
+              onMouseUp={this.onMouseUpHandler}
+              onMouseMove={this.onMouseMoveHandler}
+              onMouseLeave={this.onMouseUpHandler}></div>
             </div>
           </div>
         </div>
@@ -62,13 +99,14 @@ class Range extends React.Component {
   componentDidMount() {
     new ResizeObserver(resizeEntity => {
       this.width = resizeEntity[0].target.clientWidth;
-      this.step = this.width / (this.props.max - this.props.min);
+      this.steps = this.props.max - this.props.min;
+      this.widthStep = this.width / this.steps;
       this.calculatePositionPullet();
     }).observe(this.rangeLineRef.current);
   }
 }
 
 ReactDOM.render(
-  <Range min={0} max={100} />,
+  <Range min={30} max={80} />,
   document.getElementById('root')
 );
