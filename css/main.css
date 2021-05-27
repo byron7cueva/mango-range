@@ -13,11 +13,12 @@ body, input {
 }
 
 .range__value {
-  width: 3em;
+  box-sizing: border-box;
+  width: 5em;
 }
 
 .range__value input {
-  width: 50%;
+  width: 70%;
   border: none;
   border-bottom: 1px solid;
   outline: none;
@@ -41,7 +42,7 @@ body, input {
 .range__content {
   display: inline-flex;
   align-items: center;
-  width: calc(100% - 6em);
+  width: calc(100% - 10em);
 }
 
 .range__line {

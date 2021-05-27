@@ -34,7 +34,7 @@ class Range extends React.Component {
       if (name === "min") {
         widthRange = this.rangeToMove.clientWidth + event.movementX;
         widthRange = (widthRange > this.width? this.width : widthRange);
-        value = Math.trunc(widthRange / this.widthStep) + this.props.minLimit;
+        value = (widthRange / this.widthStep + this.props.minLimit).toFixed(2);
         // Min value and max value can't be crossed in range
         if (value >= this.props.max) {
           return;
@@ -43,7 +43,7 @@ class Range extends React.Component {
       } else {
         widthRange = this.rangeToMove.clientWidth - event.movementX;
         widthRange = (widthRange > this.width? this.width : widthRange);
-        value = this.props.maxLimit - (Math.trunc(widthRange / this.widthStep));
+        value = (this.props.maxLimit - (widthRange / this.widthStep)).toFixed(2);
         // Min value and max value can't be crossed in range
         if (value <= this.props.min) {
           return;
