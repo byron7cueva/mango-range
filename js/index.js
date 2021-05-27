@@ -11,6 +11,8 @@ class Range extends React.Component {
     this.rangeLineRef = React.createRef();
     this.rangeAreaMinRef = React.createRef();
     this.rangeAreaMaxRef = React.createRef();
+    this.minValueInputRef = React.createRef();
+    this.maxValueInputRef = React.createRef();
     this.width = 0;
     this.widthStep = 0;
     this.rangeToMove = null;
@@ -28,7 +30,8 @@ class Range extends React.Component {
     if (this.rangeToMove !== null) {
       let widthRange;
       let value;
-      if (this.rangeToMove.dataset.name === "minValue") {
+      const { name } = this.rangeToMove.dataset;
+      if (name === "minValue") {
         widthRange = this.rangeToMove.clientWidth + event.movementX;
         widthRange = (widthRange > this.width? this.width : widthRange);
         value = Math.trunc(widthRange / this.widthStep) + this.props.min;
@@ -45,17 +48,28 @@ class Range extends React.Component {
       }
       this.rangeToMove.style.width = `${widthRange}px`;
       this.setState({
-        [this.rangeToMove.dataset.name]: value
+        [name]: value
       });
+      this[`${name}InputRef`].current.value = value;
     }
   }
 
-  onChangeHandler = (event) => {
-    this.setState({
-      [event.target.name]: event.target.value
-    }, () => {
-      this.calculatePositionPullet();
-    });
+  onKeyDownHandler = (event) => {
+    if (event.key === 'Enter') {
+      const { name, value } = event.target;
+      const numberValue = parseInt(value);
+      if (numberValue < this.props.min || numberValue > this.props.max
+        || (name === 'minValue' && numberValue >= this.state.maxValue )
+        || (name === 'maxValue' && numberValue <= this.state.minValue)) {
+        event.target.value = this.state[name];
+        return;
+      }
+      this.setState({
+        [name]: value
+      }, () => {
+        this.calculatePositionPullet();
+      });
+    }
   }
 
   calculatePositionPullet() {
@@ -67,7 +81,7 @@ class Range extends React.Component {
     return (
       <div className="range">
         <div className="range__value range__value-min">
-          <input type="text" name="minValue" value={this.state.minValue} onChange={this.onChangeHandler} />
+          <input type="number" name="minValue" ref={this.minValueInputRef} onKeyDown={this.onKeyDownHandler} />
         </div>
         <div className="range__content">
           <div className="range__line" ref={this.rangeLineRef}>
@@ -90,7 +104,7 @@ class Range extends React.Component {
           </div>
         </div>
         <div className="range__value range__value-max">
-          <input type="text" name="maxValue" value={this.state.maxValue} onChange={this.onChangeHandler} />
+          <input type="text" name="maxValue" ref={this.maxValueInputRef} onKeyDown={this.onKeyDownHandler} />
         </div>
       </div>
     )
@@ -103,6 +117,8 @@ class Range extends React.Component {
       this.widthStep = this.width / this.steps;
       this.calculatePositionPullet();
     }).observe(this.rangeLineRef.current);
+    this.minValueInputRef.current.value = this.state.minValue;
+    this.maxValueInputRef.current.value = this.state.maxValue;
   }
 }
 
