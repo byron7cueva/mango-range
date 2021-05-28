@@ -1,6 +1,6 @@
-'use strict'
+import React, { Component } from 'react';
 
-class Range extends React.Component {
+export class NormalRange extends Component {
 
   constructor(props) {
     super(props);

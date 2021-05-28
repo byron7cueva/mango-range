@@ -1,6 +1,8 @@
-'use strict'
+import React, { Component } from 'react';
 
-class Exercise1 extends React.Component {
+import { NormalRange } from '../components/NormalRange';
+
+export class Exercise1 extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,7 +25,7 @@ class Exercise1 extends React.Component {
 
   render() {
     return (
-      <Range
+      <NormalRange
         minLimit={30}
         maxLimit={80}
         min={this.state.mi}
@@ -34,8 +36,3 @@ class Exercise1 extends React.Component {
     );
   }
 }
-
-ReactDOM.render(
-  <Exercise1 />,
-  document.getElementById('root')
-);
