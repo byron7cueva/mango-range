@@ -15,21 +15,31 @@ export class Exercise1 extends Component {
     this.fetchData();
   }
 
-  onChangeMin = (value) => {
+  onChangeMin = (value, id) => {
+    const store = [ ...this.state.data ];
+    const index = store.findIndex(range => range.id === id);
+    store[index].min = value;
     this.setState({
-      mi: value
+      data: store
     });
   }
 
-  onChangeMax = (value) => {
+  onChangeMax = (value, id) => {
+    const store = [ ...this.state.data ];
+    const index = store.findIndex(range => range.id === id);
+    store[index].max = value;
     this.setState({
-      mx: value
+      data: store
     });
   }
 
   async fetchData () {
     const data = await Api.getAllRanges();
     this.setState({data});
+  }
+
+  findById(id) {
+    return this.state.data.find(rage => rage.id === id);
   }
 
   render() {
@@ -40,6 +50,7 @@ export class Exercise1 extends Component {
           data.map(range => (
             <li key={range.id}>
               <NormalRange
+                id={range.id}
                 minLimit={range.minLimit}
                 maxLimit={range.maxLimit}
                 min={range.min}

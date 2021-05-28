@@ -48,7 +48,7 @@ export class NormalRange extends Component {
         if (value >= this.props.max) {
           return;
         }
-        this.props.onChangeMin(value);
+        this.props.onChangeMin(value, this.props.id);
       } else {
         widthRange = offsetLeft + clientWidth - event.clientX;
         widthRange = (widthRange > this.width? this.width : widthRange);
@@ -58,7 +58,7 @@ export class NormalRange extends Component {
         if (value <= this.props.min) {
           return;
         }
-        this.props.onChangeMax(value);
+        this.props.onChangeMax(value, this.props.id);
       }
       rangeToMove.style.width = `${widthRange}px`;
       const input = this[`${name}InputRef`].current;
@@ -81,9 +81,9 @@ export class NormalRange extends Component {
       }
 
       if (name === "min") {
-        this.props.onChangeMin(value);
+        this.props.onChangeMin(value, this.props.id);
       } else {
-        this.props.onChangeMax(value);
+        this.props.onChangeMax(value, this.props.id);
       }
 
       this.setState({

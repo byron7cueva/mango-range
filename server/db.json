@@ -1,9 +1,9 @@
 {
   "ranges": [
-    { "id": 1, "maxLimit": 0, "minLimit": 100, "min": 20, "max": 50},
-    { "id": 2, "maxLimit": 50, "minLimit": 80, "min": 55, "max": 70},
-    { "id": 3, "maxLimit": 10, "minLimit": 60, "min": 15, "max": 20},
-    { "id": 4, "maxLimit": 40, "minLimit": 180, "min": 55, "max": 70}
+    { "id": 1, "minLimit": 0, "maxLimit": 100, "min": 20, "max": 50},
+    { "id": 2, "minLimit": 50, "maxLimit": 80, "min": 55, "max": 70},
+    { "id": 3, "minLimit": 10, "maxLimit": 60, "min": 15, "max": 20},
+    { "id": 4, "minLimit": 40, "maxLimit": 180, "min": 55, "max": 70}
   ],
   "fixedRanges": [
     { "min": 5.99, "max": 70.99, "rangeValues": [1.99, 5.99, 10.99, 30.99, 50.99, 70.99]},
