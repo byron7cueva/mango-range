@@ -3,7 +3,7 @@ import React from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 
 import { Exercise1 } from './pages/Exercise1';
-import { Exercise2 } from './pages/Excercise2';
+import { Exercise2 } from './pages/Exercise2';
 import { Layout } from './components/Layout';
 
 export const App = () => (
