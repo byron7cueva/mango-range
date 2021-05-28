@@ -1,3 +1,4 @@
+import './css/main.css';
 import React from 'react';
 import { BrowserRouter, Switch, Route, Link } from 'react-router-dom';
 
