@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 
 import { NormalRange } from '../components/NormalRange';
+import { Api } from '../api';
 
 export class Exercise1 extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mi: 45,
-      mx: 70
+      data: []
     };
+  }
+
+  componentDidMount() {
+    this.fetchData();
   }
 
   onChangeMin = (value) => {
@@ -23,16 +27,30 @@ export class Exercise1 extends Component {
     });
   }
 
+  async fetchData () {
+    const data = await Api.getAllRanges();
+    this.setState({data});
+  }
+
   render() {
-    return (
-      <NormalRange
-        minLimit={30}
-        maxLimit={80}
-        min={this.state.mi}
-        max={this.state.mx}
-        onChangeMin={this.onChangeMin}
-        onChangeMax={this.onChangeMax}
-      />
+    const { data } = this.state;
+    return ( 
+      <ul>
+        {
+          data.map(range => (
+            <li key={range.id}>
+              <NormalRange
+                minLimit={range.minLimit}
+                maxLimit={range.maxLimit}
+                min={range.min}
+                max={range.max}
+                onChangeMin={this.onChangeMin}
+                onChangeMax={this.onChangeMax}
+            />
+            </li>
+          ))
+        } 
+      </ul>
     );
   }
 }
