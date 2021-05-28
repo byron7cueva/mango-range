@@ -4,7 +4,8 @@
   "description": "Range for Mango",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack serve --mode development"
+    "dev": "webpack serve --mode development",
+    "server": "json-server --port 8081 --watch server/db.json"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
     "babel-loader": "^8.2.2",
     "css-loader": "^5.2.6",
     "html-webpack-plugin": "^5.3.1",
+    "json-server": "^0.16.3",
     "style-loader": "^2.0.0",
     "webpack": "^5.38.1",
     "webpack-cli": "^4.7.0",
