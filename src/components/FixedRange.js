@@ -16,6 +16,37 @@ export class FixedRange extends Component {
     this.width = 0;
     this.widthStep = 0;
     this.pulletToMove = null;
+    this.resizeObserver = null;
+  }
+
+  componentDidMount() {
+   this.resizeObserver = new ResizeObserver(resizeEntity => {
+      this.width = resizeEntity[0].target.clientWidth;
+      this.steps = this.props.rangeValues.length;
+      this.widthStep = this.width / this.steps; 
+      const stepsPosition = [];
+      this.props.rangeValues.forEach((value, i) => {
+        const position = i * this.widthStep;
+        let max = position + this.widthStep / 2;
+        let min = position - this.widthStep / 2;
+        min = min < 0? 0 : min;
+        max = max > this.width? this.width : max;
+        stepsPosition.push({position, min, max});
+      });
+      const positionsMin = stepsPosition.map((pos, i) => ({
+        value: this.props.rangeValues[i], ...pos
+      }));
+      const positionsMax = stepsPosition.reverse().map((pos, i) => ({
+        value: this.props.rangeValues[i], ...pos
+      }));
+      this.setState({positionsMin, positionsMax});
+      this.calculatePositionPullet();
+    });
+    this.resizeObserver.observe(this.rangeLineRef.current);
+  }
+
+  componentWillUnmount() {
+    this.resizeObserver.disconnect();
   }
 
   onMouseDownHandler = (event) => {
@@ -45,14 +76,14 @@ export class FixedRange extends Component {
         widthRange = (widthRange > this.width? this.width : widthRange);
         const position = this.state.positionsMin.find(pos => posX >= pos.min && posX <= pos.max);
         if (position && position.value < this.props.max) {
-          this.props.onChangeMin(position.value);
+          this.props.onChangeMin(position.value, this.props.id);
         }
       } else {
         widthRange = offsetLeft + clientWidth - event.clientX;
         widthRange = (widthRange > this.width? this.width : widthRange);
         const position = this.state.positionsMax.find(pos => posX >= pos.min && posX <= pos.max);
         if (position && position.value > this.props.min) {
-          this.props.onChangeMax(position.value);
+          this.props.onChangeMax(position.value, this.props.id);
         }
       }
       rangeToMove.style.width = `${widthRange}px`;  
@@ -98,30 +129,5 @@ export class FixedRange extends Component {
         </div>
       </div>
     )
-  }
-
-  componentDidMount() {
-    new ResizeObserver(resizeEntity => {
-      this.width = resizeEntity[0].target.clientWidth;
-      this.steps = this.props.rangeValues.length;
-      this.widthStep = this.width / this.steps; 
-      const stepsPosition = [];
-      this.props.rangeValues.forEach((value, i) => {
-        const position = i * this.widthStep;
-        let max = position + this.widthStep / 2;
-        let min = position - this.widthStep / 2;
-        min = min < 0? 0 : min;
-        max = max > this.width? this.width : max;
-        stepsPosition.push({position, min, max});
-      });
-      const positionsMin = stepsPosition.map((pos, i) => ({
-        value: this.props.rangeValues[i], ...pos
-      }));
-      const positionsMax = stepsPosition.reverse().map((pos, i) => ({
-        value: this.props.rangeValues[i], ...pos
-      }));
-      this.setState({positionsMin, positionsMax});
-      this.calculatePositionPullet();
-    }).observe(this.rangeLineRef.current);
-  }
+  } 
 }

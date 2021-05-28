@@ -16,12 +16,12 @@ export const App = () => (
           <Link to="/exercise1">Exercise1</Link>
         </li>
         <li>
-          <Link to="/excercise2">Exercise2</Link>
+          <Link to="/exercise2">Exercise2</Link>
         </li>
       </ul>
     </nav>
     <Switch>
-      <Route path="/" exact component={Exercise1} />
+      <Route path="/" exact component={Exercise2} />
       <Route path="/exercise1" exact component={Exercise1} />
       <Route path="/exercise2" exact component={Exercise2} />
     </Switch>

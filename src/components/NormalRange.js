@@ -16,6 +16,21 @@ export class NormalRange extends Component {
     this.width = 0;
     this.widthStep = 0;
     this.pulletToMove = null;
+    this.resizeObserver = null;
+  }
+
+  componentDidMount() {
+    this.resizeObserver = new ResizeObserver(resizeEntity => {
+      this.width = resizeEntity[0].target.clientWidth;
+      this.steps = this.props.maxLimit - this.props.minLimit;
+      this.widthStep = this.width / this.steps;
+      this.calculatePositionPullet();
+    })
+    this.resizeObserver.observe(this.rangeLineRef.current);
+  }
+
+  componentWillUnmount() {
+    this.resizeObserver.disconnect();
   }
 
   onMouseDownHandler = (event) => {
@@ -159,14 +174,5 @@ export class NormalRange extends Component {
         </div>
       </div>
     )
-  }
-
-  componentDidMount() {
-    new ResizeObserver(resizeEntity => {
-      this.width = resizeEntity[0].target.clientWidth;
-      this.steps = this.props.maxLimit - this.props.minLimit;
-      this.widthStep = this.width / this.steps;
-      this.calculatePositionPullet();
-    }).observe(this.rangeLineRef.current);
-  }
+  } 
 }

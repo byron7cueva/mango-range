@@ -19,5 +19,8 @@ async function get(endpoint) {
 export const Api = {
   getAllRanges() {
     return get('/ranges');
+  },
+  getAllFixedRanges() {
+    return get('/fixedRanges');
   }
 }

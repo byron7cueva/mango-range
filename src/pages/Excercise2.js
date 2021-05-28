@@ -1,37 +1,62 @@
 import React, { Component } from 'react';
 
 import { FixedRange } from '../components/FixedRange';
+import { Api } from '../api';
 
 export class Exercise2 extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mi: 1.99,
-      mx: 50.99
+      data: []
     };
   }
 
-  onChangeMin = (value) => {
+  componentDidMount() {
+    this.fetchData();
+  }
+
+  onChangeMin = (value, id) => {
+    const store = [ ...this.state.data ];
+    const index = store.findIndex(range => range.id === id);
+    store[index].min = value;
     this.setState({
-      mi: value
+      data: store
     });
   }
 
-  onChangeMax = (value) => {
+  onChangeMax = (value, id) => {
+    const store = [ ...this.state.data ];
+    const index = store.findIndex(range => range.id === id);
+    store[index].max = value;
     this.setState({
-      mx: value
+      data: store
     });
+  }
+
+  async fetchData() {
+    const data = await Api.getAllFixedRanges();
+    this.setState({data});
   }
 
   render() {
+    const { data } = this.state;
     return (
-      <FixedRange
-        min={this.state.mi}
-        max={this.state.mx}
-        rangeValues={[1.99, 5.99, 10.99, 30.99, 50.99, 70.99]}
-        onChangeMin={this.onChangeMin}
-        onChangeMax={this.onChangeMax}
-      />
+      <ul>
+        {
+          data.map(range => (
+            <li key={range.id}>
+              <FixedRange
+                id={range.id}
+                min={range.min}
+                max={range.max}
+                rangeValues={range.rangeValues}
+                onChangeMin={this.onChangeMin}
+                onChangeMax={this.onChangeMax}
+              />   
+            </li>
+          ))
+        }
+      </ul>
     );
   }
 }
