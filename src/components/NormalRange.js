@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 
+/**
+ * Normal range from min to max number
+ * The component CAN'T be a HTML5 input range. It has to be a custom one
+ */
 export class NormalRange extends Component {
 
   constructor(props) {
@@ -35,15 +39,16 @@ export class NormalRange extends Component {
 
   onMouseDownHandler = (event) => {
     this.pulletToMove = event.target;
-    this.pulletToMove.classList.toggle("bullet--draggable");
-    this.rangeLineRef.current.parentElement.classList.toggle("range__content--dragable");
+    // Dragging a bullet turns cursor to dragging
+    this.pulletToMove.classList.add("bullet--draggable");
+    this.rangeLineRef.current.parentElement.classList.add("range__content--dragable");
   }
 
   onMouseUpHandler = () => {
     if (this.pulletToMove !== null) {
-      this.pulletToMove.classList.toggle("bullet--draggable")
+      this.pulletToMove.classList.remove("bullet--draggable")
+      this.rangeLineRef.current.parentElement.classList.remove("range__content--dragable");
       this.pulletToMove = null;
-      this.rangeLineRef.current.parentElement.classList.toggle("range__content--dragable");
     }
   }
 
@@ -140,7 +145,7 @@ export class NormalRange extends Component {
                 onKeyDown={this.onKeyDownHandler}
               />
             : <span data-name="min" onClick={this.onClickLabelHandler}>{min}</span>
-          } $
+          } €
         </div>
         { /* The component CAN'T be a HTML5 input range. It has to be a custom one */ }
         <div className="range__content" onMouseUp={this.onMouseUpHandler} onMouseLeave={this.onMouseUpHandler} onMouseMove={this.onMouseMoveHandler}>
@@ -170,7 +175,7 @@ export class NormalRange extends Component {
               onKeyDown={this.onKeyDownHandler}
               />
             : <span data-name="max" onClick={this.onClickLabelHandler}>{max}</span>
-          } $
+          } €
         </div>
       </div>
     )

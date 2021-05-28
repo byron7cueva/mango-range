@@ -17,9 +17,11 @@ async function get(endpoint) {
 
 
 export const Api = {
+  // For this example, provide a mocked http service returning min and max values that have to be used in the component
   getAllRanges() {
     return get('/ranges');
   },
+  // Provide a mocked http service that returns the array of numbers
   getAllFixedRanges() {
     return get('/fixedRanges');
   }

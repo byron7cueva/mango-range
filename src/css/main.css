@@ -3,6 +3,13 @@ body, input {
   font-family: Helvetica;
 }
 
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0;
+  padding: 0;
+}
+
 .range {
   display: flex;
   align-items: center;
@@ -99,9 +106,31 @@ body, input {
   left: 0;
 }
 
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0;
-  padding: 0;
+.list-ranges {
+  padding: 0 1em;
+}
+
+.list-ranges li {
+  list-style: none;
+  margin-bottom: 2em;
+}
+
+.menu {
+  margin-bottom: 3em;
+}
+
+.menu ul {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu li {
+  list-style: none;
+  padding: 0 1em;
+}
+
+.menu li a {
+  text-decoration: none;
 }

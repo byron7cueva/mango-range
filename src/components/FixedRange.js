@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 
+/**
+ * Fixed number of options range
+ * The component CAN'T be a HTML5 input range. It has to be a custom one
+ */
 export class FixedRange extends Component {
 
   constructor(props) {
@@ -22,7 +26,7 @@ export class FixedRange extends Component {
   componentDidMount() {
    this.resizeObserver = new ResizeObserver(resizeEntity => {
       this.width = resizeEntity[0].target.clientWidth;
-      this.steps = this.props.rangeValues.length;
+      this.steps = this.props.rangeValues.length - 1;
       this.widthStep = this.width / this.steps; 
       const stepsPosition = [];
       this.props.rangeValues.forEach((value, i) => {
@@ -33,6 +37,7 @@ export class FixedRange extends Component {
         max = max > this.width? this.width : max;
         stepsPosition.push({position, min, max});
       });
+      // Given a range of values the user will only be able to select those values in range
       const positionsMin = stepsPosition.map((pos, i) => ({
         value: this.props.rangeValues[i], ...pos
       }));
@@ -51,15 +56,15 @@ export class FixedRange extends Component {
 
   onMouseDownHandler = (event) => {
     this.pulletToMove = event.target;
-    this.pulletToMove.classList.toggle("bullet--draggable");
-    this.rangeLineRef.current.parentElement.classList.toggle("range__content--dragable");
+    this.pulletToMove.classList.add("bullet--draggable");
+    this.rangeLineRef.current.parentElement.classList.add("range__content--dragable");
   }
 
   onMouseUpHandler = () => {
     if (this.pulletToMove !== null) {
       this.calculatePositionPullet();
-      this.pulletToMove.classList.toggle("bullet--draggable")
-      this.rangeLineRef.current.parentElement.classList.toggle("range__content--dragable");
+      this.pulletToMove.classList.remove("bullet--draggable")
+      this.rangeLineRef.current.parentElement.classList.remove("range__content--dragable");
       this.pulletToMove = null;
     }
   }
@@ -75,6 +80,7 @@ export class FixedRange extends Component {
         widthRange = event.clientX - offsetLeft;
         widthRange = (widthRange > this.width? this.width : widthRange);
         const position = this.state.positionsMin.find(pos => posX >= pos.min && posX <= pos.max);
+        // Min value and max value can't be crossed in range
         if (position && position.value < this.props.max) {
           this.props.onChangeMin(position.value, this.props.id);
         }
@@ -82,11 +88,12 @@ export class FixedRange extends Component {
         widthRange = offsetLeft + clientWidth - event.clientX;
         widthRange = (widthRange > this.width? this.width : widthRange);
         const position = this.state.positionsMax.find(pos => posX >= pos.min && posX <= pos.max);
+        // Min value and max value can't be crossed in range
         if (position && position.value > this.props.min) {
           this.props.onChangeMax(position.value, this.props.id);
         }
       }
-      rangeToMove.style.width = `${widthRange}px`;  
+      rangeToMove.style.width = `${widthRange}px`;
     }
   }
 
@@ -103,7 +110,7 @@ export class FixedRange extends Component {
       <div className="range">
         <div className="range__value range__value-min">
           {/* For this type of range, currency values are not input changable. They have to be only a label */}
-          <span data-name="min">{min}</span> $
+          <span data-name="min">{min}</span> €
         </div>
         { /* The component CAN'T be a HTML5 input range. It has to be a custom one */ }
         <div className="range__content" onMouseUp={this.onMouseUpHandler} onMouseLeave={this.onMouseUpHandler} onMouseMove={this.onMouseMoveHandler}>
@@ -125,7 +132,7 @@ export class FixedRange extends Component {
         </div>
         <div className="range__value range__value-max">
           {/* For this type of range, currency values are not input changable. They have to be only a label */}
-          <span data-name="max">{max}</span> $
+          <span data-name="max">{max}</span> €
         </div>
       </div>
     )

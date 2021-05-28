@@ -41,7 +41,7 @@ export class Exercise2 extends Component {
   render() {
     const { data } = this.state;
     return (
-      <ul>
+      <ul className="list-ranges">
         {
           data.map(range => (
             <li key={range.id}>

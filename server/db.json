@@ -3,10 +3,24 @@
     { "id": 1, "minLimit": 0, "maxLimit": 100, "min": 20, "max": 50},
     { "id": 2, "minLimit": 50, "maxLimit": 80, "min": 55, "max": 70},
     { "id": 3, "minLimit": 10, "maxLimit": 60, "min": 15, "max": 20},
-    { "id": 4, "minLimit": 40, "maxLimit": 180, "min": 55, "max": 70}
+    { "id": 4, "minLimit": 40, "maxLimit": 180, "min": 55, "max": 150},
+    { "id": 5, "minLimit": 20, "maxLimit": 30, "min": 21, "max": 25},
+    { "id": 6, "minLimit": 10.50, "maxLimit": 150.30, "min": 55.25, "max": 70.30},
+    { "id": 7, "minLimit": 300, "maxLimit": 400, "min": 350.50, "max": 380.20},
+    { "id": 8, "minLimit": 120, "maxLimit": 260, "min": 170, "max": 230},
+    { "id": 9, "minLimit": 100, "maxLimit": 500, "min": 200.20, "max": 405.20},
+    { "id": 10, "minLimit": 230, "maxLimit": 620, "min": 253.12, "max": 428.20}
   ],
   "fixedRanges": [
     { "id": 1, "min": 5.99, "max": 70.99, "rangeValues": [1.99, 5.99, 10.99, 30.99, 50.99, 70.99]},
-    { "id": 2, "min": 10, "max": 80, "rangeValues": [10, 20, 30, 40, 50, 60, 70, 80]}
+    { "id": 2, "min": 10, "max": 80, "rangeValues": [10, 20, 30, 40, 50, 60, 70, 80]},
+    { "id": 3, "min": 120.30, "max": 693.20, "rangeValues": [120.30, 203.25, 562.10, 693.20, 850.63]},
+    { "id": 4, "min": 6, "max": 12, "rangeValues": [2, 4, 6, 8, 10, 12, 14, 16]},
+    { "id": 5, "min": 2, "max": 13, "rangeValues": [1, 2, 3, 5, 8, 13, 21, 45]},
+    { "id": 6, "min": 12, "max": 15, "rangeValues": [3, 6, 9, 12, 15, 18, 21, 24]},
+    { "id": 7, "min": 10, "max": 30, "rangeValues": [10, 20, 30]},
+    { "id": 8, "min": 0.3, "max": 0.8, "rangeValues": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]},
+    { "id": 9, "min": 2, "max": 3.5, "rangeValues": [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4]},
+    { "id": 10, "min": 300, "max": 500, "rangeValues": [100, 200, 300, 400, 500, 600, 700]}
   ]
 }
