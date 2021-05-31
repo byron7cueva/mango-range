@@ -26,8 +26,8 @@ export class FixedRange extends Component {
   componentDidMount() {
    this.resizeObserver = new ResizeObserver(resizeEntity => {
       this.width = resizeEntity[0].target.clientWidth;
-      this.steps = this.props.rangeValues.length - 1;
-      this.widthStep = this.width / this.steps; 
+      const steps = this.props.rangeValues.length - 1;
+      this.widthStep = this.width / steps; 
       const stepsPosition = [];
       this.props.rangeValues.forEach((value, i) => {
         const position = i * this.widthStep;

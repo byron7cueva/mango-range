@@ -26,8 +26,8 @@ export class NormalRange extends Component {
   componentDidMount() {
     this.resizeObserver = new ResizeObserver(resizeEntity => {
       this.width = resizeEntity[0].target.clientWidth;
-      this.steps = this.props.maxLimit - this.props.minLimit;
-      this.widthStep = this.width / this.steps;
+      const steps = this.props.maxLimit - this.props.minLimit;
+      this.widthStep = this.width / steps;
       this.calculatePositionPullet();
     })
     this.resizeObserver.observe(this.rangeLineRef.current);
