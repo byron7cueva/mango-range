@@ -1,7 +1,7 @@
 import React from 'react';
 import render from 'react-test-renderer';
 
-import { NormalRange } from './NormalRange';
+import { Range } from './Range';
 
 class ResizeObserver {
   observe() { }
@@ -11,7 +11,7 @@ global.ResizeObserver = ResizeObserver;
 
 test('Render NormalRange', () => {
   const component = render.create(
-    <NormalRange />
+    <Range />
   );
 
   expect(component).toBeTruthy();
