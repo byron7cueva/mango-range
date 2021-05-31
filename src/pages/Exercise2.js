@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import { FixedRange } from '../components/FixedRange';
+import { Range } from '../components/Range';
 import { Api } from '../api';
 
 export class Exercise2 extends Component {
@@ -45,7 +46,7 @@ export class Exercise2 extends Component {
         {
           data.map(range => (
             <li key={range.id}>
-              <FixedRange
+              <Range
                 id={range.id}
                 min={range.min}
                 max={range.max}

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import { NormalRange } from '../components/NormalRange';
+import { Range } from '../components/Range';
 import { Api } from '../api';
 
 export class Exercise1 extends Component {
@@ -49,7 +50,7 @@ export class Exercise1 extends Component {
         {
           data.map(range => (
             <li key={range.id}>
-              <NormalRange
+              <Range
                 id={range.id}
                 minLimit={range.minLimit}
                 maxLimit={range.maxLimit}
