@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-import { NormalRange } from '../components/NormalRange';
 import { Range } from '../components/Range';
 import { Api } from '../api';
 

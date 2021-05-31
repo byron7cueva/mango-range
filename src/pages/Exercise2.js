@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-import { FixedRange } from '../components/FixedRange';
 import { Range } from '../components/Range';
 import { Api } from '../api';
 
