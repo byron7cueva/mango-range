@@ -23,7 +23,6 @@ export class Range extends Component {
     this.widthStep = 0;
     this.pulletToMove = null;
     this.resizeObserver = null;
-    this.isEditable = this.rangeValues? false : true;
   }
 
   componentDidMount() {
@@ -150,7 +149,7 @@ export class Range extends Component {
   }
 
   onClickLabelHandler = (event) => {
-    if (!this.isEditable) {
+    if (this.props.rangeValues !== undefined) {
       event.preventDefault();
       return false;
     }
@@ -197,13 +196,13 @@ export class Range extends Component {
   }
 
   render() {
-    const { min, max } = this.props;
-    const { minEditable, maxEditable } = this.state; 
+    const { min, max, rangeValues } = this.props;
+    const { minEditable, maxEditable } = this.state;
     return (
       <div className="range">
         <div className="range__value range__value-min">
           {/* The user can click on both currency number label values (min or max) and set a new value */}
-          { this.isEditable && minEditable
+          { rangeValues === undefined && minEditable
             ? <input
                 type="number"
                 name="min"
@@ -233,7 +232,7 @@ export class Range extends Component {
         </div>
         <div className="range__value range__value-max">
           {/* The user can click on both currency number label values (min or max) and set a new value */}
-          { this.isEditable && maxEditable
+          { rangeValues === undefined && maxEditable
             ? <input
               type="text"
               name="max"
